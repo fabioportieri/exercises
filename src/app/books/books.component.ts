@@ -20,7 +20,26 @@ export class BooksComponent implements OnInit {
   ngOnInit(): void {
 
 
-    // TODO
+    this.books$ = this.booksService.fetchBooks();
+
+    this.book$ = this.books$.pipe(
+      concatMap((books) => {
+        return from(books);
+      })
+    );
+
+    this.author$ = this.book$.pipe(
+      mergeMap(book => this.booksService.getAuthorById(book.authorId))
+    )
+
+    this.res$ = this.author$.pipe(
+      withLatestFrom(this.books$),
+      map(([author, books]: [Author, Books[]]) => {
+          const book = books.find(b => b.authorId === author.id)
+          return { authorName: author.name, titleBook: book?.title };
+      }),
+      toArray()
+    )
 
 
 
