@@ -1,0 +1,38 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "il signore degli anelli",
+      "authorId": 1
+    },
+    {
+      "id": 2,
+      "title": "IT",
+      "authorId": 2
+    },
+    {
+      "id": 3,
+      "title": "Libro xyz",
+      "authorId": 3
+    },
+    {
+      "id": 4,
+      "title": "L'ombra dello scorpione",
+      "authorId": 2
+    }
+  ],
+  "authors": [
+    {
+      "id": 1,
+      "name": "Federico Federici"
+    },
+    {
+      "id": 2,
+      "name": "Stephen King"
+    },
+    {
+      "id": 3,
+      "name": "Guido Guidi"
+    }
+  ]
+}
