@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { forkJoin, from, Observable, of } from 'rxjs';
+import { combineLatest, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, concatMap, tap, withLatestFrom, toArray } from 'rxjs/operators';
 import { Author, Books, BooksWithAuthor } from './books.model';
 import { BooksService } from './books.service';
@@ -11,7 +11,7 @@ import { BooksService } from './books.service';
 })
 export class BooksComponent implements OnInit {
 
-  res$: Observable<any> = of(null);
+  res$: Observable<BooksWithAuthor[]> = of([]);
   books$!: Observable<Books[]>;
   book$!: Observable<Books>;
   author$!: Observable<Author>;
@@ -31,27 +31,39 @@ export class BooksComponent implements OnInit {
       })
     );
 
-    // fetch author by book id
-    this.author$ = this.book$.pipe(
-      mergeMap(book => this.booksService.getAuthorById(book.authorId))
-    )
-
-    // takes author and book list and map them into a list of bookWithAuthor
-    // toArray is needed in order to "collect" each emission and return an observable that
-    // emits only once with all the previous emissions as array
-    this.res$ = this.author$.pipe(
-      withLatestFrom(this.books$),
-      map(([author, books]: [Author, Books[]]) => {
-          const book = books.find(b => b.authorId === author.id)
-          return { authorName: author.name, titleBook: book?.title };
+    // solution 1:
+    this.res$ = this.book$.pipe(
+      mergeMap(book => {
+        return this.booksService.getAuthorById(book.authorId).pipe(
+          map(author => ({ authorName: author.name, titleBook: book.title} as BooksWithAuthor))
+        )
       }),
       toArray()
-    )
+    );
+
+
+    // solution 2:
+    this.res$ = this.book$.pipe(
+      mergeMap(book => {
+        return combineLatest([
+          this.booksService.getAuthorById(book.authorId),
+          of(book)
+        ])
+      }),
+      map(([author, book]: [Author, Books]) => {
+        return { authorName: author.name, titleBook: book.title} as BooksWithAuthor;
+      }),
+      toArray()
+    );
+
+
+    // in both solutions we had to pass the parameter book further in the chain:
+    // https://medium.com/@snorredanielsen/rxjs-accessing-a-previous-value-further-down-the-pipe-chain-b881026701c1
 
 
 
     this.res$.subscribe(res => {
-      console.log('res', res);
+      // console.log('res', res);
     })
 
   }
