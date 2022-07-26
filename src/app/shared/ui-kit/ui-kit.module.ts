@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RxjsPaginatorComponent } from './paginator/rxjs-paginator.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -9,7 +10,9 @@ import { RxjsPaginatorComponent } from './paginator/rxjs-paginator.component';
     RxjsPaginatorComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     RxjsPaginatorComponent
