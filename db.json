@@ -19,6 +19,11 @@
       "id": 4,
       "title": "L'ombra dello scorpione",
       "authorId": 2
+    },
+    {
+      "id": 5,
+      "title": "Libro di Guido",
+      "authorId": 3
     }
   ],
   "authors": [
