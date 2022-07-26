@@ -1,0 +1,2 @@
+# exercises
+angular / javascript exercises
