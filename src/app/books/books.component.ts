@@ -21,7 +21,7 @@ export class BooksComponent implements OnInit {
 
 
     // TODO
-
+    // use the two apis in books.service to obtain a list of BooksWithAuthor object
 
 
     this.res$.subscribe(res => {
