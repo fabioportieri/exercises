@@ -1,6 +1,14 @@
 <div class="container">
 
-  <pre>
-    Risultato: {{(res$ | async) | json }}
-  </pre>
+
+
+  <ul>
+    <li *ngFor="let el of res$ | async">
+      <div> book: {{ el.titleBook }} </div>
+      <div> title: {{ el.authorName }} </div>
+    </li>
+  </ul>
+
+
+  <app-rxjs-paginator [data]="(res$ | async) ?? []"></app-rxjs-paginator>
 </div>

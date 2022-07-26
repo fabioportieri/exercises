@@ -11,7 +11,7 @@ import { BooksService } from './books.service';
 })
 export class BooksComponent implements OnInit {
 
-  res$: Observable<any> = of(null);
+  res$: Observable<BooksWithAuthor[]> = of([]);
   books$!: Observable<Books[]>;
   book$!: Observable<Books>;
   author$!: Observable<Author>;
@@ -36,7 +36,7 @@ export class BooksComponent implements OnInit {
       withLatestFrom(this.books$),
       map(([author, books]: [Author, Books[]]) => {
           const book = books.find(b => b.authorId === author.id)
-          return { authorName: author.name, titleBook: book?.title };
+          return { authorName: author.name, titleBook: book?.title } as BooksWithAuthor;
       }),
       toArray()
     )
