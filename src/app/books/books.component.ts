@@ -20,18 +20,25 @@ export class BooksComponent implements OnInit {
   ngOnInit(): void {
 
 
+    // fetch books
     this.books$ = this.booksService.fetchBooks();
 
+    //convert the observable emitting only one value (array of books) to
+    // an observable emitting several values where each value is a book in the former array
     this.book$ = this.books$.pipe(
       concatMap((books) => {
         return from(books);
       })
     );
 
+    // fetch author by book id
     this.author$ = this.book$.pipe(
       mergeMap(book => this.booksService.getAuthorById(book.authorId))
     )
 
+    // takes author and book list and map them into a list of bookWithAuthor
+    // toArray is needed in order to "collect" each emission and return an observable that
+    // emits only once with all the previous emissions as array
     this.res$ = this.author$.pipe(
       withLatestFrom(this.books$),
       map(([author, books]: [Author, Books[]]) => {
