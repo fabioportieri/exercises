@@ -24,6 +24,31 @@
       "id": 5,
       "title": "Libro di Guido",
       "authorId": 3
+    },
+    {
+      "id": 6,
+      "title": "50 sfumature",
+      "authorId": 3
+    },
+    {
+      "id": 7,
+      "title": "80 sfumature",
+      "authorId": 1
+    },
+    {
+      "id": 8,
+      "title": "libro dei numeri",
+      "authorId": 1
+    },
+    {
+      "id": 9,
+      "title": "libro dei cavalli",
+      "authorId": 2
+    },
+    {
+      "id": 10,
+      "title": "libro dei gatti",
+      "authorId": 1
     }
   ],
   "authors": [
