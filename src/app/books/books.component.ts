@@ -15,6 +15,9 @@ export class BooksComponent implements OnInit {
   books$!: Observable<Books[]>;
   book$!: Observable<Books>;
   author$!: Observable<Author>;
+
+  dataToShow: BooksWithAuthor[] = [];
+
   constructor(private booksService: BooksService) { }
 
   ngOnInit(): void {
@@ -65,4 +68,8 @@ export class BooksComponent implements OnInit {
 
   }
 
+
+  paginatorChangeHandler(data: any): void {
+    this.dataToShow = data;
+  }
 }

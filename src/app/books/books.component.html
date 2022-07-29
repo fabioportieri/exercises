@@ -10,5 +10,5 @@
   </ul>
 
 
-  <app-rxjs-paginator [data]="(res$ | async) ?? []"></app-rxjs-paginator>
+  <app-rxjs-paginator (change)="paginatorChangeHandler($event)" [data]="(res$ | async) ?? []"></app-rxjs-paginator>
 </div>
