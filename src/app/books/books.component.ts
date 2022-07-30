@@ -1,27 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { combineLatest, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, concatMap, tap, withLatestFrom, toArray } from 'rxjs/operators';
+import { RxjsPaginatorComponent } from '../shared/ui-kit/paginator/rxjs-paginator.component';
+import { TableDataSource } from '../shared/ui-kit/paginator/table-datasource';
 import { Author, Books, BooksWithAuthor } from './books.model';
 import { BooksService } from './books.service';
 
 @Component({
   selector: 'app-books',
-  templateUrl: './books.component.html',
+  template: `
+      <div class="container">
+
+
+
+    <ul>
+      <li *ngFor="let el of (dataToShow$ | async)">
+        <div> book: {{ el.titleBook }} </div>
+        <div> title: {{ el.authorName }} </div>
+      </li>
+    </ul>
+
+
+    <app-rxjs-paginator #paginator [data]="(res$ | async) ?? []"></app-rxjs-paginator>
+    </div>
+
+  `,
   styleUrls: ['./books.component.scss']
 })
-export class BooksComponent implements OnInit {
+export class BooksComponent implements OnInit, AfterViewInit, OnDestroy {
 
   res$: Observable<BooksWithAuthor[]> = of([]);
   books$!: Observable<Books[]>;
   book$!: Observable<Books>;
   author$!: Observable<Author>;
 
-  dataToShow: BooksWithAuthor[] = [];
+  dataToShow$: Observable<BooksWithAuthor[]> = of([]);
+  datasource?: TableDataSource<BooksWithAuthor>;
 
-  constructor(private booksService: BooksService) { }
+  @ViewChild('paginator') paginator!: RxjsPaginatorComponent<BooksWithAuthor>;
+
+  constructor(
+    private booksService: BooksService,
+    private cd: ChangeDetectorRef
+  ) {
+
+  }
+
 
   ngOnInit(): void {
 
+    this._loadDataFromBackend();
+
+  }
+
+
+  ngAfterViewInit(): void {
+    // in this hook we know that paginator is loaded, otherwise it is undefined
+
+    this.datasource = new TableDataSource<BooksWithAuthor>(this.paginator);
+    this.datasource.connect();
+    this.dataToShow$ = this.datasource.getData();
+  }
+
+
+  private _loadDataFromBackend(): void {
 
     this.books$ = this.booksService.fetchBooks();
 
@@ -43,7 +85,7 @@ export class BooksComponent implements OnInit {
 
 
     // solution 2:
-    this.res$ = this.book$.pipe(
+    this.dataToShow$ = this.book$.pipe(
       mergeMap(book => {
         return combineLatest([
           this.booksService.getAuthorById(book.authorId),
@@ -64,12 +106,11 @@ export class BooksComponent implements OnInit {
 
     this.res$.subscribe(res => {
       // console.log('res', res);
+      // this.dataToShow = res;
     })
-
   }
 
-
-  paginatorChangeHandler(data: any): void {
-    this.dataToShow = data;
+  ngOnDestroy(): void {
+    this.datasource?.disconnect();
   }
 }

@@ -64,7 +64,7 @@ import { BooksWithAuthor } from 'src/app/books/books.model';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RxjsPaginatorComponent implements OnInit {
+export class RxjsPaginatorComponent<T> implements OnInit {
 
   pagesNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   pages$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -86,12 +86,12 @@ export class RxjsPaginatorComponent implements OnInit {
   }
 
 
-  private _data: BooksWithAuthor[] = [];
-  public get data(): BooksWithAuthor[] {
+  private _data: T[] = [];
+  public get data(): T[] {
     return this._data;
   }
   @Input()
-  public set data(value: BooksWithAuthor[]) {
+  public set data(value: T[]) {
     this._data = value;
     this.totalLength$.next(this.data.length);
     this.currentPage$.next(1);
