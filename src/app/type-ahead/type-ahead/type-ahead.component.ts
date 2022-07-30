@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, Observable, of } from 'rxjs';
-import { debounceTime, delay, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
+import { mergeMap, debounceTime, delay, switchMap, map, distinctUntilChanged, mergeAll } from 'rxjs/operators';
 
 @Component({
   selector: 'app-type-ahead',
@@ -34,12 +34,14 @@ export class TypeAheadComponent implements OnInit, AfterViewInit {
       debounceTime(300),
       map((data) => (data.target as HTMLInputElement).value),
       //distinctUntilChanged()
-      switchMap(searchKey => {
-        return of(this.DATA.filter(d => d.indexOf(searchKey) > -1)).pipe(
-          delay(100)
-        );
-      })
-      // map(searchKey => this.filterArrays(searchKey))
+      // switchMap(searchKey => {
+      //   return of(this.DATA.filter(d => d.indexOf(searchKey) > -1)).pipe(
+      //     delay(100)
+      //   );
+      // })
+      map(searchKey => this.filterArrays(searchKey)),
+      //mergeAll()
+      mergeMap(data => data)
 
     ).subscribe((data: string[])  => {
         this.res = data;
