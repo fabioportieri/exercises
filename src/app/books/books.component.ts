@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { combineLatest, forkJoin, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, concatMap, tap, withLatestFrom, toArray } from 'rxjs/operators';
 import { RxjsPaginatorComponent } from '../shared/ui-kit/paginator/rxjs-paginator.component';
@@ -9,12 +9,12 @@ import { BooksService } from './books.service';
 @Component({
   selector: 'app-books',
   template: `
-      <div class="container">
+      <div class="container" *ngIf="(dataToShow$ | async) as data">
 
 
 
     <ul>
-      <li *ngFor="let el of (dataToShow$ | async)">
+      <li *ngFor="let el of data">
         <div> book: {{ el.titleBook }} </div>
         <div> title: {{ el.authorName }} </div>
       </li>
@@ -34,10 +34,13 @@ export class BooksComponent implements OnInit, AfterViewInit, OnDestroy {
   book$!: Observable<Books>;
   author$!: Observable<Author>;
 
-  dataToShow$: Observable<BooksWithAuthor[]> = of([]);
+  dataToShow$?: Observable<BooksWithAuthor[]>;
   datasource?: TableDataSource<BooksWithAuthor>;
 
-  @ViewChild('paginator') paginator!: RxjsPaginatorComponent<BooksWithAuthor>;
+  // use viewchildren instead of viewchild because if template reference is under a *ngIf it will stay undefined even after view init
+  // @ViewChild('paginator') paginator!: RxjsPaginatorComponent<BooksWithAuthor>;
+  @ViewChildren('paginator') paginatorWrapper!: QueryList<RxjsPaginatorComponent<BooksWithAuthor>>;
+  paginator!: RxjsPaginatorComponent<BooksWithAuthor>;
 
   constructor(
     private booksService: BooksService,
@@ -55,11 +58,20 @@ export class BooksComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit(): void {
-    // in this hook we know that paginator is loaded, otherwise it is undefined
+    // in this hook we know that paginator is loaded (unless behind ngIf condition), otherwise it is undefined
 
-    this.datasource = new TableDataSource<BooksWithAuthor>(this.paginator);
-    this.datasource.connect();
-    this.dataToShow$ = this.datasource.getData();
+    this.paginatorWrapper.changes.subscribe((comps: QueryList<RxjsPaginatorComponent<BooksWithAuthor>>) => {
+        this.paginator = comps.first;
+        this.datasource?.disconnect(); // clean datasource subscriptions
+        this.datasource = new TableDataSource<BooksWithAuthor>(this.paginator, this.cd); // todo cleanup, avoid passing change detector
+        this.datasource.connect();
+        this.dataToShow$ = this.datasource.getData();
+        // this programmatically force angular to check for rendering changes otherwise it will raise:
+        // ERROR Error: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+        // since we are changing variables that are to be rendered asyncronously
+        this.cd.detectChanges();
+    });
+
   }
 
 

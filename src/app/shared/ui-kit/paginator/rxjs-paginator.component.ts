@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { combineLatest, BehaviorSubject, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
@@ -70,13 +70,18 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   pages$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   elementsPerPage$: BehaviorSubject<number> = new BehaviorSubject<number>(2);
   currentPage$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
-  totalLength$: BehaviorSubject<number> = new BehaviorSubject<number>(0); //Observable<number> = of(0);
+  totalLength$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  datasource$: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]); // subject needed to synchronize paginator data with datsource
 
   elementsPerPageFC: FormControl = new FormControl();
+
+
 
   private _pageSize = 2;
   public get pageSize() {
     return this._pageSize;
+;
   }
 
   @Input()
@@ -93,6 +98,7 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   @Input()
   public set data(value: T[]) {
     this._data = value;
+    this.datasource$.next(value);
     this.totalLength$.next(this.data.length);
     this.currentPage$.next(1);
   }
