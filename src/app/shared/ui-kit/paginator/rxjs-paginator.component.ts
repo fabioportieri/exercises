@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { combineLatest, BehaviorSubject, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
 import { BooksWithAuthor } from 'src/app/books/books.model';
+import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './paginator.constants';
 
 @Component({
   selector: 'app-rxjs-paginator',
@@ -15,14 +16,21 @@ import { BooksWithAuthor } from 'src/app/books/books.model';
       </div>
       <div class="next" (click)="changePage(currentPage+1)"> > </div>
       <div class="last" (click)="changePage(getLastPage())"> >> </div>
+
+      <div class="menu-section" (mouseleave)="menuHandler()">
+
+        <div class="form hidden" #formElements>
+          <input type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
+          <span (keydown.enter)="changeElementsPerPage(elementsPerPageFC.value)">
+            change to {{elementsPerPageFC.value}} elements per size </span>
+        </div>
+        <div class="menu-icon" (mouseenter)="menuHandler()" >
+          <fa-icon [icon]="['fas', 'ellipsis-v']"></fa-icon>
+        </div>
+      </div>
     </div>
 
-    <div class="form">
-      <input type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
-      <button (click)="changeElementsPerPage(elementsPerPageFC.value)">
-        <span>  change to {{elementsPerPageFC.value}} elements per size </span>
-      </button>
-    </div>
+
 
 <!--
     <pre> number of pages: {{this.pagesNumber$ | async }} </pre>
@@ -55,7 +63,36 @@ import { BooksWithAuthor } from 'src/app/books/books.model';
     font-weight: 600;
     color: #505050;
     font-family: monospace;
+    &.menu-section {
+      margin-left: auto;
+      width: auto;
+      display: flex;
+      .form {
+        transition: width .2s ease-in-out;
+        transition-delay: 0.2s;
+        visibility:visible;
+        width:100%;
+        &.hidden {
+          width:0px;
+          visibility:hidden;
+        }
+
+
+      }
+      .menu-icon {
+        transition: transform .2s ease-in-out;
+        font-size: 1rem;
+        width: 20px;
+        margin-left: auto;
+        height: 20px;
+        &:hover {
+          transform: rotate(90deg);
+        }
+      }
+    }
   }
+
+
   .paginator > div.active {
     border-color: #a9caed;
     color: #021120;
@@ -66,10 +103,11 @@ import { BooksWithAuthor } from 'src/app/books/books.model';
 })
 export class RxjsPaginatorComponent<T> implements OnInit {
 
-  pagesNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  pagesNumber$: BehaviorSubject<number> = new BehaviorSubject<number>(START_PAGE);
   pages$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-  elementsPerPage$: BehaviorSubject<number> = new BehaviorSubject<number>(2);
-  currentPage$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  elementsPerPage$: BehaviorSubject<number> = new BehaviorSubject<number>(DEFAULT_ELEMENTS_PER_PAGE);
+  currentPage$: BehaviorSubject<number> = new BehaviorSubject<number>(DEFAULT_CURRENT_PAGE);
   totalLength$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   datasource$: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]); // subject needed to synchronize paginator data with datsource
@@ -77,6 +115,7 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   elementsPerPageFC: FormControl = new FormControl();
 
 
+  @ViewChild('formElements') formElements!: ElementRef<HTMLDivElement>;
 
   private _pageSize = 2;
   public get pageSize() {
@@ -100,7 +139,7 @@ export class RxjsPaginatorComponent<T> implements OnInit {
     this._data = value;
     this.datasource$.next(value);
     this.totalLength$.next(this.data.length);
-    this.currentPage$.next(1);
+    this.currentPage$.next(DEFAULT_CURRENT_PAGE);
   }
 
   constructor() { }
@@ -113,9 +152,7 @@ export class RxjsPaginatorComponent<T> implements OnInit {
     this.elementsPerPage$.next(elementsPerPage);
   }
   changePage(page: number): void {
-    console.log('changePage called with page ', page);
     if (page >= 1 && page <= this.getLastPage()) {
-      console.log('goto page ', page);
       this.currentPage$.next(page);
     }
   }
@@ -126,7 +163,6 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   private initPaginator(): void {
       // calculate length and pages
 
-    this.totalLength$.subscribe(d => console.log('total length changed??', d))
 
     // pageNumber$: dipende da totalLength e elementsPerPage
     combineLatest([this.totalLength$, this.elementsPerPage$]).pipe(
@@ -134,13 +170,13 @@ export class RxjsPaginatorComponent<T> implements OnInit {
         const num = Math.ceil(length / elementsPerPage);
         this.pagesNumber$.next(num);
       })
-    ).subscribe(data => console.log('triggered change on length or elementsPerPage:', data));
+    ).subscribe();
 
     // if currentPage > totalePages reset currentPage
     this.pagesNumber$.pipe(
       withLatestFrom(this.currentPage$),
       filter(([numpagesTot, currentPage]: [number, number]) => currentPage > numpagesTot)
-    ).subscribe(() => this.currentPage$.next(1))
+    ).subscribe(() => this.currentPage$.next(DEFAULT_CURRENT_PAGE))
 
     combineLatest([this.currentPage$, this.totalLength$, this.elementsPerPage$]).pipe(
 
@@ -155,6 +191,18 @@ export class RxjsPaginatorComponent<T> implements OnInit {
        this.pages$.next(pages);
 
       })
-    ).subscribe(data => console.log('triggered change on currentpage length or elementsPerPage:', data));
+    ).subscribe();
+  }
+
+
+  // menuOutHandler(): void {
+  //   this.formElements.nativeElement.classList.remove("showing");
+  //   this.formElements.nativeElement.classList.add("hidden");
+  //   console.log('out', this.formElements.nativeElement.classList);
+  // }
+
+  menuHandler(): void {
+    this.formElements.nativeElement.classList.toggle("hidden");
+    console.log('handler menu', this.formElements.nativeElement.classList);
   }
 }

@@ -11,7 +11,8 @@ import { UiKitModule } from './ui-kit/ui-kit.module';
     UiKitModule
   ],
   exports: [
-    UiKitModule
+    UiKitModule,
+
   ],
 })
 export class SharedModule { }

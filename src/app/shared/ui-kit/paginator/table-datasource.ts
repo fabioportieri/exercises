@@ -1,8 +1,6 @@
-import { BehaviorSubject, combineLatest, Observable, of } from "rxjs";
-import { BooksWithAuthor } from "src/app/books/books.model";
+import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { RxjsPaginatorComponent } from "./rxjs-paginator.component";
-import { distinctUntilChanged, filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { ChangeDetectorRef } from "@angular/core";
+import { map, tap } from 'rxjs/operators';
 
 /*
 il concetto qui e' di incapsulare la logica fuori dal paginatore (Single responsability principle)
@@ -17,7 +15,7 @@ cosi che in futuro possa essere estendibile
 export class TableDataSource<T, P extends RxjsPaginatorComponent<T> = RxjsPaginatorComponent<T>> {
 
   private dataFiltered: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
-  constructor(private paginator: P, private cd: ChangeDetectorRef) {
+  constructor(private paginator: P) {
 
   }
 
@@ -39,26 +37,23 @@ export class TableDataSource<T, P extends RxjsPaginatorComponent<T> = RxjsPagina
 
   private _setFilteredData(): void {
 
-
     const elementsPerPage$ = this.paginator.elementsPerPage$;
     const currentPage$ = this.paginator.currentPage$;
 
 
-    // dataFiltered
-    combineLatest([this.paginator.datasource$, elementsPerPage$, currentPage$]).pipe(
+    combineLatest([
+      this.paginator.datasource$,
+      elementsPerPage$,
+      currentPage$,
+    ]).pipe(
       map(([datasource, elements, page]) => {
-       const dataStartOffset = (page>1) ? elements * page - elements + page: elements * page - elements;
-       let dataEndOffset = (datasource.length-1 < dataStartOffset + elements) ? datasource.length-1 : dataStartOffset + elements;
+       const dataStartOffset = elements * (page - 1);
+       let dataEndOffset = (datasource.length-1 < dataStartOffset + elements - 1) ? datasource.length-1 : dataStartOffset + elements - 1;
        return {dataStartOffset, dataEndOffset, datasource}
       }),
       tap(x => console.log('datasource pipeline: ', x)),
-      tap(({dataStartOffset, dataEndOffset, datasource}) => {
-        const filteredArray = datasource.slice(dataStartOffset, dataEndOffset+1);
-        console.log('filtered array;', filteredArray);
-        console.log('datasource', datasource);
-        this.dataFiltered.next(filteredArray);
-      })
-    ).subscribe((_) => this.cd.detectChanges()); // run change detection since dataFiltered is rendered in template of main component
+      map(({dataStartOffset, dataEndOffset, datasource}) => (datasource.slice(dataStartOffset, dataEndOffset+1)))
+    ).subscribe(this.dataFiltered); // shorthand notation for: .subscribe((data) => this.dataFiltered.next(data));
 
   }
 
