@@ -17,14 +17,14 @@ import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './p
       <div class="next" (click)="changePage(currentPage+1)"> > </div>
       <div class="last" (click)="changePage(getLastPage())"> >> </div>
 
-      <div class="menu-section" (mouseleave)="menuHandler()">
+      <div class="menu-section hidden" #formElements (mouseleave)="menuOutHandler()">
 
-        <div class="form hidden" #formElements>
+        <div class="form" >
           <input type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
           <span (keydown.enter)="changeElementsPerPage(elementsPerPageFC.value)">
             change to {{elementsPerPageFC.value}} elements per size </span>
         </div>
-        <div class="menu-icon" (mouseenter)="menuHandler()" >
+        <div class="menu-icon" (mouseenter)="menuInHandler()" >
           <fa-icon [icon]="['fas', 'ellipsis-v']"></fa-icon>
         </div>
       </div>
@@ -63,20 +63,34 @@ import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './p
     font-weight: 600;
     color: #505050;
     font-family: monospace;
+
     &.menu-section {
       margin-left: auto;
-      width: auto;
       display: flex;
-      .form {
-        transition: width .2s ease-in-out;
-        transition-delay: 0.2s;
-        visibility:visible;
-        width:100%;
-        &.hidden {
+      width: 60%;
+      transition: width .2s ease-in-out;
+      &.hidden {
+        width: 20px;
+        .form {
           width:0px;
-          visibility:hidden;
+          & > * {
+            opacity: 0;
+            pointer-events: none;
+            transition-delay: 0s;
+            transition: all .1s ease-in-out;
+          }
         }
-
+      }
+      .form {
+        transition: all .2s ease-in-out;
+        transition-delay: 0.2s;
+        width: 100%;
+        & > * {
+          opacity: 1;
+          pointer-events: all;
+          transition: all .4s ease-in-out;
+          transition-delay: 0.2s;
+        }
 
       }
       .menu-icon {
@@ -90,8 +104,13 @@ import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './p
         }
       }
     }
+
   }
 
+  @keyframes show {
+    0%   { opacity:0.0; }
+    100% { opacity:1.0; }
+  }
 
   .paginator > div.active {
     border-color: #a9caed;
@@ -195,14 +214,17 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   }
 
 
-  // menuOutHandler(): void {
-  //   this.formElements.nativeElement.classList.remove("showing");
-  //   this.formElements.nativeElement.classList.add("hidden");
-  //   console.log('out', this.formElements.nativeElement.classList);
-  // }
+  menuOutHandler(): void {
+    this.formElements.nativeElement.classList.add("hidden");
+    console.log('out', this.formElements.nativeElement.classList);
+  }
+  menuInHandler(): void {
+    this.formElements.nativeElement.classList.remove("hidden");
+    console.log('in', this.formElements.nativeElement.classList);
+  }
 
   menuHandler(): void {
     this.formElements.nativeElement.classList.toggle("hidden");
-    console.log('handler menu', this.formElements.nativeElement.classList);
+    // console.log('handler menu', this.formElements.nativeElement.classList);
   }
 }
