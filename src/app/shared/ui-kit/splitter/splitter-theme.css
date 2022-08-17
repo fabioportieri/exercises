@@ -1,0 +1,16 @@
+.p-splitter {
+  border: 1px solid #dee2e6;
+  background: #ffffff;
+  border-radius: 6px;
+  color: #495057;
+}
+.p-splitter .p-splitter-gutter {
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  background: #f8f9fa;
+}
+.p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
+  background: #dee2e6;
+}
+.p-splitter .p-splitter-gutter-resizing {
+  background: #dee2e6;
+}

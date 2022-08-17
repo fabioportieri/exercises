@@ -4,12 +4,14 @@ import { RxjsPaginatorComponent } from './paginator/rxjs-paginator.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SplitterComponent } from './splitter/splitter.component';
 
 
 
 @NgModule({
   declarations: [
-    RxjsPaginatorComponent
+    RxjsPaginatorComponent,
+    SplitterComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
   exports: [
     RxjsPaginatorComponent,
-
+    SplitterComponent
   ],
 })
 export class UiKitModule { }
