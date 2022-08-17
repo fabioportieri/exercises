@@ -5,12 +5,12 @@ import { mergeMap, debounceTime, delay, switchMap, map, distinctUntilChanged, me
 @Component({
   selector: 'app-type-ahead',
   template: `
-  <div class=”card”>
-  <div class=”card-body”>
-    <input #mioinput type=”text” id=”search-input” style="width: 25em;">
+  <div class="card">
+  <div class="card-body">
+    <input #mioinput type="text" id="search-input" style="width: 25em;">
   </div>
  </div>
- <div id=”output”>
+ <div id="output">
 </div>
 <pre> {{ res | json }}</pre>
 
