@@ -23,7 +23,7 @@ import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './p
           <input (keydown.enter)="changeElementsPerPage(elementsPerPageFC.value)"
               type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
           <span>
-            change to {{elementsPerPageFC.value ?? '-'}} elements per size </span>
+            change to {{elementsPerPageFC.value ?? '-'}} elements per page </span>
         </div>
         <div class="menu-icon" (mouseenter)="menuInHandler()" >
           <fa-icon [icon]="['fas', 'ellipsis-v']"></fa-icon>

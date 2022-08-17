@@ -29,7 +29,7 @@ import { BooksService } from './books.service';
       <ul>
         <li *ngFor="let el of (dataToShow$ | async) ?? []">
           <div><span class="title">book</span> {{ el.titleBook }}</div>
-          <div><span class="title">title</span> {{ el.authorName }}</div>
+          <div><span class="title">author</span> {{ el.authorName }}</div>
         </li>
       </ul>
 

@@ -21,8 +21,10 @@
         .title {
           font-weight: 600;
           text-transform: uppercase;
-          padding-right: 50px;
+
           font-size: 0.9rem;
+          display: inline-block;
+          min-width:150px;
         }
       }
     }
