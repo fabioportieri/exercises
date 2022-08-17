@@ -20,9 +20,10 @@ import { START_PAGE, DEFAULT_CURRENT_PAGE, DEFAULT_ELEMENTS_PER_PAGE } from './p
       <div class="menu-section hidden" #formElements (mouseleave)="menuOutHandler()">
 
         <div class="form" >
-          <input type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
-          <span (keydown.enter)="changeElementsPerPage(elementsPerPageFC.value)">
-            change to {{elementsPerPageFC.value}} elements per size </span>
+          <input (keydown.enter)="changeElementsPerPage(elementsPerPageFC.value)"
+              type="number" class="form-control" name="elementsPerPage" [formControl]="elementsPerPageFC"  />
+          <span>
+            change to {{elementsPerPageFC.value ?? '-'}} elements per size </span>
         </div>
         <div class="menu-icon" (mouseenter)="menuInHandler()" >
           <fa-icon [icon]="['fas', 'ellipsis-v']"></fa-icon>
@@ -168,6 +169,7 @@ export class RxjsPaginatorComponent<T> implements OnInit {
   }
 
   changeElementsPerPage(elementsPerPage: number): void {
+    console.log('key down enter');
     this.elementsPerPage$.next(elementsPerPage);
   }
   changePage(page: number): void {
