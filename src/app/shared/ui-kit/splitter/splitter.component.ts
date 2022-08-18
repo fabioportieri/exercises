@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, EventEmitter, Output, Input, ContentChildren, ViewChild, ElementRef, TemplateRef, QueryList, ChangeDetectorRef } from '@angular/core';
-import { DomHandler } from '../../DomHandler';
+import { DomHandler } from '../../domhandler';
 
 @Component({
   selector: 'app-splitter',
