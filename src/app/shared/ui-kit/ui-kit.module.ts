@@ -6,6 +6,7 @@ import { SharedModule } from '../shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SplitterComponent } from './splitter/splitter.component';
 import { TreeWidgetComponent, TreeWidgetModule } from './tree-widget/tree-widget.component';
+import { TreeItemComponent } from './tree-widget/tree-item.component';
 
 
 
