@@ -3,10 +3,23 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
 @Component({
   selector: 'app-tree-widget-demo',
   template: `
-    <app-tree-widget></app-tree-widget>
+  <div class="container">
+
+<!--  -->
+    <app-tree-widget
+
+    >
+    </app-tree-widget>
+
+  </div>
   `,
-  styles: [
-  ],
+  styles: [`
+  .container {
+    display: block;
+    width: 600px;
+    margin: 30px auto;
+  }
+  `],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })

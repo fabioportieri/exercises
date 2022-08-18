@@ -5,6 +5,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   NgModule,
+  Input,
 } from '@angular/core';
 import { TreeItemComponent } from './tree-item.component';
 
@@ -13,6 +14,7 @@ import { TreeItemComponent } from './tree-item.component';
   selector: 'app-tree-widget',
   template: `
    <app-tree-item></app-tree-item>
+   <app-tree-item [level]="2"></app-tree-item>
   `,
   styles: [`
 
@@ -21,7 +23,10 @@ import { TreeItemComponent } from './tree-item.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeWidgetComponent implements OnInit {
+
+  // @Input() datasource;
   constructor() {}
+
 
   ngOnInit(): void {}
 }

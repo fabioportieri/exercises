@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tree-item',
@@ -8,8 +8,13 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
         <div class="item-content">
           <div class="node-indentation">
             <div class="indentation-flex">
-              <span class="indentation-unit">
-              </span>
+
+            <span class="indentation-unit no-horizontal-line-extension"></span>
+
+            <span class="indentation-unit">
+            </span>
+
+              <span class="indentation-unit no-vertical-line-extension"></span>
             </div>
           </div>
           <div class="expander">
@@ -57,9 +62,10 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   }
   .node-indentation {
     display: inline-block;
-    width: 26px;
   }
-
+  .node-indentation .indentation-flex {
+    display: flex;
+  }
   .node-indentation .indentation-flex .indentation-unit {
     width: 26px;
     height: 30px;
@@ -68,6 +74,15 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
     background-size: 100% 100%;
     opacity: .3;
   }
+  .node-indentation .indentation-flex .indentation-unit.no-horizontal-line-extension {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAElJREFUSEtjZCARrFy5sgGkJTw8HEwTCxiJVQhTN2oRLCRGg45hNDGMJgZ4ATKaGEYTw2hiwKhPR6uJ0WoCnihGE8NoYqB/YgAAwZV4H64lS6EAAAAASUVORK5CYII=");
+  }
+
+  .node-indentation .indentation-flex .indentation-unit.no-vertical-line-extension {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAGFJREFUSEvtlUEKACAIBNOX9x0/aeGh8NBFA6HYbok0OS1ErWhREacBlDYNdVC3DSAMD4RBRPrpmsw8rK6q+x2t5veR8WiB/CEL4kEncAgUab7pRbzT9qAO6vBNpDPwsboJ6NEZFectcIsAAAAASUVORK5CYII=");
+  }
+
+
   .tree-item-expander {
     margin-left: -6px;
     min-width: 32px;
@@ -81,6 +96,8 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeItemComponent implements OnInit {
+
+  @Input() level: number = 1;
 
   constructor() { }
 
