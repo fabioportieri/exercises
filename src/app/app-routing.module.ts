@@ -8,10 +8,17 @@ const routes: Routes = [
       import('./books/books.module').then((m) => m.BooksModule),
   },
   {
-    path: '',
+    path: 'splitter',
     loadChildren: () =>
       import('./splitter-demo/splitter-demo.module').then(
         (m) => m.SplitterDemoModule
+      ),
+  },
+  {
+    path: '',
+    loadChildren: () =>
+      import('./tree-widget-demo/tree-widget-demo.module').then(
+        (m) => m.TreeWidgetDemoModule
       ),
   },
 ];

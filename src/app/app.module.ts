@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TreeWidgetDemoModule } from './tree-widget-demo/tree-widget-demo.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AppComponent } from './app.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TreeWidgetDemoModule
   ],
   providers: [],
   bootstrap: [AppComponent]

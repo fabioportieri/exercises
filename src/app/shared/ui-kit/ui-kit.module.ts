@@ -5,23 +5,26 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SplitterComponent } from './splitter/splitter.component';
+import { TreeWidgetComponent, TreeWidgetModule } from './tree-widget/tree-widget.component';
 
 
 
 @NgModule({
   declarations: [
     RxjsPaginatorComponent,
-    SplitterComponent
+    SplitterComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+
   ],
   exports: [
     RxjsPaginatorComponent,
-    SplitterComponent
+    SplitterComponent,
+    TreeWidgetModule
   ],
 })
 export class UiKitModule { }
