@@ -12,6 +12,7 @@ import { UiKitModule } from '../shared/ui-kit/ui-kit.module';
   ],
   imports: [
     UiKitModule,
+    CommonModule,
     TreeWidgetDemoRoutingModule
   ]
 })

@@ -7,6 +7,8 @@ import {
   NgModule,
   Input,
   ChangeDetectorRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { TreeDataService } from './tree-data-source';
 import { TreeItemComponent } from './tree-item.component';
@@ -24,6 +26,7 @@ import { FlatNodeView, RecursiveItemNode } from './tree-widget-model';
       <app-tree-item
         *ngFor="let node of treeDataService.datasource; let i = index"
         (toggle)="toggleNodeHandler($event)"
+        (click)="selected.emit(node)"
         [node]="node"
       >
       </app-tree-item>
@@ -52,6 +55,8 @@ export class TreeWidgetComponent implements OnInit {
   constructor(public treeDataService: TreeDataService) {
 
   }
+
+  @Output() selected: EventEmitter<FlatNodeView> = new EventEmitter<FlatNodeView>();
 
   ngOnInit(): void {}
 

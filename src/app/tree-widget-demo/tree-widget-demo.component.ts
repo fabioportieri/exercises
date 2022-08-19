@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { RecursiveItemNode } from '../shared/ui-kit/tree-widget/tree-widget-model';
+import { FlatNodeView, RecursiveItemNode } from '../shared/ui-kit/tree-widget/tree-widget-model';
 
 
 
@@ -12,9 +12,23 @@ import { RecursiveItemNode } from '../shared/ui-kit/tree-widget/tree-widget-mode
 @Component({
   selector: 'app-tree-widget-demo',
   template: `
-    <div class="container">
-      <app-tree-widget [datasource]="treeData"> </app-tree-widget>
-    </div>
+
+
+
+    <app-splitter [style]="{'height': '300px'}" styleClass="mb-5">
+            <ng-template>
+            <!-- <div class="container"> -->
+              <app-tree-widget [datasource]="treeData" (selected)="selectedNodeHandler($event)"> </app-tree-widget>
+            <!-- </div> -->
+            </ng-template>
+            <ng-template>
+                <div class="panel col flex align-items-center justify-content-center" *ngIf="selectedNode">
+                    <pre>
+                      {{ selectedNode | json }}
+                    </pre>
+                </div>
+            </ng-template>
+        </app-splitter>
   `,
   styles: [
     `
@@ -30,6 +44,7 @@ import { RecursiveItemNode } from '../shared/ui-kit/tree-widget/tree-widget-mode
 })
 export class TreeWidgetDemoComponent implements OnInit {
 
+  selectedNode: FlatNodeView | null = null;
 
 // TODO: predisporre anche formato flat direttamente
 treeData: RecursiveItemNode[] = [
@@ -67,4 +82,7 @@ treeData: RecursiveItemNode[] = [
 
   ngOnInit(): void {}
 
+  selectedNodeHandler(selected: FlatNodeView): void {
+    this.selectedNode = selected;
+  }
 }
