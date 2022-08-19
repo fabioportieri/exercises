@@ -32,7 +32,11 @@ import { FlatNodeView, RecursiveItemNode } from './tree-widget-model';
       </app-tree-item>
     </div>
   `,
-  styles: [``],
+  styles: [`
+  app-tree-widget {
+    width: 100%;
+  }
+  `],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

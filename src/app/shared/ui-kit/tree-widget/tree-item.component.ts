@@ -50,7 +50,8 @@ import { FlatNodeView } from './tree-widget-model';
   .tree-item {
     height: 30px;
     line-height: 30px;
-    padding: 0 12px;
+    padding: 0;
+    padding-left: 12px;
     position: relative;
     user-select: none;
     width: auto;
