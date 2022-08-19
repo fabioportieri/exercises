@@ -24,8 +24,8 @@ import { FlatNodeView } from './tree-widget-model';
             </div>
           </div>
           <div class="expander" *ngIf="node.expandable" (click)="toggle.emit(node)">
-            <span class="icon material-symbols-rounded">
-            {{node.compressed ? 'chevron_right' : 'expand_more' }}
+            <span class="icon material-symbols-rounded compress" [class.compressed]="node.compressed">
+              chevron_right
             </span>
           </div>
           <span *ngIf="node.expandable" class="icon material-symbols-rounded">
@@ -118,9 +118,16 @@ import { FlatNodeView } from './tree-widget-model';
 
   .icon.material-symbols-outlined,
   .icon.material-symbols-rounded  {
-    padding-left: 2px;
+
     line-height: 30px;
     color: #3232327a;
+  }
+  .expander span.compress {
+    transition: transform 0.2s;
+    font-size: 1.8rem;
+  }
+  .expander span.compress.compressed {
+    transform: rotate(90deg);
   }
   .highlighted .icon.material-symbols-outlined,
   .highlighted .icon.material-symbols-rounded  {
