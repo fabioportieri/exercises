@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   NgModule,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { TreeDataService } from './tree-data-source';
 import { TreeItemComponent } from './tree-item.component';
@@ -22,7 +23,7 @@ import { FlatNodeView, RecursiveItemNode } from './tree-widget-model';
     <div class="tree-widget-container">
       <app-tree-item
         *ngFor="let node of treeDataService.datasource; let i = index"
-
+        (toggle)="toggleNodeHandler($event)"
         [node]="node"
       >
       </app-tree-item>
@@ -48,9 +49,20 @@ export class TreeWidgetComponent implements OnInit {
     // TODO convert recursive data structure to flattened one so that it can be consumed, anf pass the datasource to treeDataService
   }
 
-  constructor(public treeDataService: TreeDataService) {}
+  constructor(public treeDataService: TreeDataService) {
+
+  }
 
   ngOnInit(): void {}
+
+  toggleNodeHandler(node: FlatNodeView): void {
+    if (node.compressed) {
+      this.treeDataService.showNodes(node.id)
+    } else {
+      this.treeDataService.hideNodes(node.id)
+    }
+
+  }
 }
 
 @NgModule({

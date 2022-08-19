@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, HostListener } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input, HostListener, EventEmitter, Output } from '@angular/core';
 import { TreeDataService } from './tree-data-source';
 import { FlatNodeView } from './tree-widget-model';
 
 @Component({
   selector: 'app-tree-item',
   template: `
-    <div class="scroller-item-view" *ngIf="node">
+    <div class="scroller-item-view" *ngIf="node && !node.hidden">
       <div class="tree-item treeNodes" [class.highlighted]="hovered">
         <div class="item-content">
           <div class="node-indentation">
@@ -23,9 +23,9 @@ import { FlatNodeView } from './tree-widget-model';
 
             </div>
           </div>
-          <div class="expander" *ngIf="node.expandable">
+          <div class="expander" *ngIf="node.expandable" (click)="toggle.emit(node)">
             <span class="icon material-symbols-rounded">
-            chevron_right
+            {{node.compressed ? 'chevron_right' : 'expand_more' }}
             </span>
           </div>
           <span *ngIf="node.expandable" class="icon material-symbols-rounded">
@@ -138,7 +138,7 @@ import { FlatNodeView } from './tree-widget-model';
 
   `],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush // TODO mess up change detection
 })
 export class TreeItemComponent implements OnInit {
 
@@ -151,6 +151,8 @@ export class TreeItemComponent implements OnInit {
     this.hovered = false;
   }
   @Input() node: FlatNodeView | null = null;
+
+  @Output() toggle: EventEmitter<FlatNodeView> = new EventEmitter<FlatNodeView>();
 
   constructor(private treeDataService: TreeDataService) {
 

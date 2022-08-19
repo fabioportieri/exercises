@@ -18,4 +18,6 @@ export interface FlatNodeView {
 	isLastChild: boolean;
   ancestorsIds: number[]; // ordered, the last element is the direct parent
   childrenIds: number[]; // ordered, the last element is the last child
+  hidden?: boolean;
+  compressed?: boolean;
 }

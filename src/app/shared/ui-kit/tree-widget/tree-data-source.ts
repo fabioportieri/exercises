@@ -15,7 +15,8 @@ export class TreeDataService {
       level: 1,
       isLastChild: true,
       ancestorsIds: [],
-      childrenIds: [2, 10]
+      childrenIds: [2, 10],
+
     },
     {
       id: 2,
@@ -110,6 +111,27 @@ export class TreeDataService {
   ];
 
   constructor() {}
+
+  showNodes(nodeId: number): void {
+    const nodeFound = this.datasource.find(el => el.id === nodeId);
+    if (nodeFound) {
+      nodeFound.compressed = false;
+      TreeUtils.findAllChildren(nodeId, this.datasource)
+      .forEach(el => console.log('shw children: ', el))
+      TreeUtils.findAllChildren(nodeId, this.datasource).map(el => el.hidden = false);
+    }
+  }
+
+  hideNodes(nodeId: number): void {
+    const nodeFound = this.datasource.find(el => el.id === nodeId);
+    if (nodeFound) {
+      nodeFound.compressed = true;
+      TreeUtils.findAllChildren(nodeId, this.datasource)
+      .forEach(el => console.log('hide children: ', el))
+      TreeUtils.findAllChildren(nodeId, this.datasource)
+      .map(el => el.hidden = true);
+    }
+  }
 }
 
 
@@ -118,6 +140,25 @@ export class TreeDataService {
 
 export class TreeUtils {
   constructor() {}
+
+
+  public static findAllChildren(
+    idNode: number, datasource: FlatNodeView[], res: FlatNodeView[] = []): FlatNodeView[] {
+      debugger;
+    let children = [];
+    for (let node of datasource) {
+      if (node.parentId === idNode) {
+        children.push(node);
+      }
+    }
+    for (let node of children) {
+      res.push(node);
+      res.push(...TreeUtils.findAllChildren(node.id, datasource, res));
+    }
+    // todo miglioralo
+    return res.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i);
+
+  }
 
   public static calculateAncestorIds<T extends GenericItemNode>(idNode: number, listDocuments: T[]): number[] {
     const res = [];
