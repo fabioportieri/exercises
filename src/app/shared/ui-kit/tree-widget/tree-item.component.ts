@@ -1,18 +1,20 @@
 import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } from '@angular/core';
+import { FlatNode } from './tree-widget-model';
 
 @Component({
   selector: 'app-tree-item',
   template: `
-    <div class="scroller-item-view">
+    <div class="scroller-item-view" *ngIf="node">
       <div class="tree-item treeNodes highlighted">
         <div class="item-content">
           <div class="node-indentation">
             <div class="indentation-flex">
 
-            <span class="indentation-unit no-horizontal-line-extension"></span>
+              <span class="indentation-unit no-horizontal-line-extension"></span>
 
-            <span class="indentation-unit">
-            </span>
+              <span class="indentation-unit t-line-extension"></span>
+
+              <span class="indentation-unit child-no-sibling-line-extension"></span>
 
               <span class="indentation-unit no-vertical-line-extension"></span>
             </div>
@@ -21,10 +23,11 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } 
             <i class="icon icon-addons-arrow-right expanded"></i>
           </div>
           <i class="item-icon icon icon icon-jfui-folder-open"></i>
-          <span class="item-text">.index</span>
+          <span class="item-text">.{{node.name}}</span>
         </div>
       </div>
     </div>
+
   `,
   styles: [`
   :host {
@@ -70,9 +73,14 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } 
     width: 26px;
     height: 30px;
     display: inherit;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAG1JREFUSEtjZCARrFy5sgGkJTw8HEwTCxiJVQhTN2oRLCRGg45hNDGMJgZ4ATKaGChKDExMTPb//v07SEqBTHIRtHr16noGBgYHmltEt8QA9RFDaGhoI02Dbvj5aDToyM6wo0E3GnTw0mbQJwYALxN9FaD0j5UAAAAASUVORK5CYII=");
     background-size: 100% 100%;
     opacity: .3;
+  }
+  .node-indentation .indentation-flex .indentation-unit.child-no-sibling-line-extension {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAG1JREFUSEtjZCARrFy5sgGkJTw8HEwTCxiJVQhTN2oRLCRGg45hNDGMJgZ4ATKaGChKDExMTPb//v07SEqBTHIRtHr16noGBgYHmltEt8QA9RFDaGhoI02Dbvj5aDToyM6wo0E3GnTw0mbQJwYALxN9FaD0j5UAAAAASUVORK5CYII=");
+  }
+  .node-indentation .indentation-flex .indentation-unit.t-line-extension {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAGtJREFUSEvtldENgEAIQ+1oTsE4us6FIdwMDCb63/rb+6bX8FIAG/ky86gqRMTJSMEUT62NXmJG5zB80+MwOAz/wtDdO4CLWch06ubztRZ1IkYjGTGdyEtVMXFHKrVH5zDI+IzO6PQzobK7ARMvaxpJxe0WAAAAAElFTkSuQmCC");
   }
   .node-indentation .indentation-flex .indentation-unit.no-horizontal-line-extension {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAeCAYAAAAy2w7YAAAAAXNSR0IArs4c6QAAAElJREFUSEtjZCARrFy5sgGkJTw8HEwTCxiJVQhTN2oRLCRGg45hNDGMJgZ4ATKaGEYTw2hiwKhPR6uJ0WoCnihGE8NoYqB/YgAAwZV4H64lS6EAAAAASUVORK5CYII=");
@@ -97,7 +105,7 @@ import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, Input } 
 })
 export class TreeItemComponent implements OnInit {
 
-  @Input() level: number = 1;
+  @Input() node: FlatNode | null = null;
 
   constructor() { }
 
