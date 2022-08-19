@@ -4,11 +4,9 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { RecursiveItemNode } from '../shared/ui-kit/tree-widget/tree-widget-model';
 
-interface GenericItemNode {
-  label: string;
-  children?: GenericItemNode[];
-}
+
 
 
 @Component({
@@ -33,8 +31,8 @@ interface GenericItemNode {
 export class TreeWidgetDemoComponent implements OnInit {
 
 
-
-treeData: GenericItemNode[] = [
+// TODO: predisporre anche formato flat direttamente
+treeData: RecursiveItemNode[] = [
   {
     label: 'ext-release-local',
     children: [
