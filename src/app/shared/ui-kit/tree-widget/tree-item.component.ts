@@ -46,12 +46,12 @@ import { FlatNodeView } from './tree-widget-model';
   :host {
     box-sizing: border-box;
   }
-
+  /* .scroller-item-view {
+  } */
   .tree-item {
     height: 30px;
     line-height: 30px;
     padding: 0;
-    padding-left: 12px;
     position: relative;
     user-select: none;
     width: auto;

@@ -116,8 +116,8 @@ export class TreeDataService {
     const nodeFound = this.datasource.find(el => el.id === nodeId);
     if (nodeFound) {
       nodeFound.compressed = false;
-      TreeUtils.findAllChildren(nodeId, this.datasource)
-      .forEach(el => console.log('shw children: ', el))
+      // TreeUtils.findAllChildren(nodeId, this.datasource)
+      // .forEach(el => console.log('shw children: ', el))
       TreeUtils.findAllChildren(nodeId, this.datasource).map(el => el.hidden = false);
     }
   }
@@ -126,8 +126,8 @@ export class TreeDataService {
     const nodeFound = this.datasource.find(el => el.id === nodeId);
     if (nodeFound) {
       nodeFound.compressed = true;
-      TreeUtils.findAllChildren(nodeId, this.datasource)
-      .forEach(el => console.log('hide children: ', el))
+      // TreeUtils.findAllChildren(nodeId, this.datasource)
+      // .forEach(el => console.log('hide children: ', el))
       TreeUtils.findAllChildren(nodeId, this.datasource)
       .map(el => el.hidden = true);
     }
@@ -144,7 +144,7 @@ export class TreeUtils {
 
   public static findAllChildren(
     idNode: number, datasource: FlatNodeView[], res: FlatNodeView[] = []): FlatNodeView[] {
-      debugger;
+      // debugger;
     let children = [];
     for (let node of datasource) {
       if (node.parentId === idNode) {
