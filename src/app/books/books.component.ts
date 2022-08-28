@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, forkJoin, from, merge, Observable, of } from 'rxjs';
-import { map, mergeMap, concatMap, tap, withLatestFrom, toArray } from 'rxjs/operators';
+import { map, mergeMap, mergeAll, concatAll, concatMap, tap, withLatestFrom, toArray } from 'rxjs/operators';
 import { Author, Books, BooksWithAuthor } from './books.model';
 import { BooksService } from './books.service';
 
@@ -30,6 +30,8 @@ export class BooksComponent implements OnInit {
         return from(books);
       })
     );
+
+    // this.book$ = this.books$.pipe(concatAll()); // alernative version, when we need only flattening and no mapping
 
     // solution 1:
     this.res$ = this.book$.pipe(
