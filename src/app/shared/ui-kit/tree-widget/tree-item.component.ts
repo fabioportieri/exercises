@@ -146,7 +146,7 @@ import { FlatNodeView } from './tree-widget-model';
 
   `],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush // mess up change detection if immutability is not used
+  // changeDetection: ChangeDetectionStrategy.OnPush // TODO mess up change detection
 })
 export class TreeItemComponent implements OnInit {
 

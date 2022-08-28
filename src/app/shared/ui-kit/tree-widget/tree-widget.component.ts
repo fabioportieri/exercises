@@ -65,9 +65,11 @@ export class TreeWidgetComponent implements OnInit {
   ngOnInit(): void {}
 
   toggleNodeHandler(node: FlatNodeView): void {
-
-    const hideNode = (node.compressed) ? false : true;
-    this.treeDataService.toggleNodes(node.id, hideNode);
+    if (node.compressed) {
+      this.treeDataService.showNodes(node.id)
+    } else {
+      this.treeDataService.hideNodes(node.id)
+    }
 
   }
 }
