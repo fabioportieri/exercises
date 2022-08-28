@@ -10,6 +10,7 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TreeWidgetDemoModule } from './tree-widget-demo/tree-widget-demo.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TreeWidgetDemoModule } from './tree-widget-demo/tree-widget-demo.module
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    TreeWidgetDemoModule
+    TreeWidgetDemoModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

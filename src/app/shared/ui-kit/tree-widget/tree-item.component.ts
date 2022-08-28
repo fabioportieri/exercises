@@ -185,6 +185,7 @@ export class TreeItemComponent implements OnInit {
    */
   hasVerticalLineIndentationClass(level_index: number, node: FlatNodeView): boolean {
 
+    // console.log('hasVerticalLineIndentationClass() called', level_index, node);
     // find ancestor node relative at "level_index"
     const ancestorId = node.ancestorsIds[level_index]
 

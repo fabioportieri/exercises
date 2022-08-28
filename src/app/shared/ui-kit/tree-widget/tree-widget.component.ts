@@ -13,7 +13,7 @@ import {
 import { TreeDataService } from './tree-data-source';
 import { TreeItemComponent } from './tree-item.component';
 import { FlatNodeView, RecursiveItemNode } from './tree-widget-model';
-
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop'
 
 
 
@@ -22,8 +22,8 @@ import { FlatNodeView, RecursiveItemNode } from './tree-widget-model';
   selector: 'app-tree-widget',
   template: `
 
-    <div class="tree-widget-container">
-      <app-tree-item
+    <div class="tree-widget-container" cdkDropList (cdkDropListDropped)="drop($event)">
+      <app-tree-item cdkDrag
         *ngFor="let node of treeDataService.datasource; let i = index"
         (toggle)="toggleNodeHandler($event)"
         (click)="selected.emit(node)"
@@ -56,7 +56,7 @@ export class TreeWidgetComponent implements OnInit {
     // TODO convert recursive data structure to flattened one so that it can be consumed, anf pass the datasource to treeDataService
   }
 
-  constructor(public treeDataService: TreeDataService) {
+  constructor(public treeDataService: TreeDataService, private cd: ChangeDetectorRef) {
 
   }
 
@@ -70,11 +70,32 @@ export class TreeWidgetComponent implements OnInit {
     this.treeDataService.toggleNodes(node.id, hideNode);
 
   }
+
+  drop(event: CdkDragDrop<string[]>): void {
+    console.log('drop ', event);
+    moveItemInArray(this.treeDataService.datasource, event.previousIndex, event.currentIndex);
+    // todo recalculate node metadata: level, expandable, etc
+    /*
+    {
+      id: 4,
+      parentId: 3,
+      expandable: true,
+      name: 'gradle',
+      level: 4,
+      isLastChild: true,
+      ancestorsIds: [1, 2, 3],
+      childrenIds: [5]
+    },
+    */
+    // this.cd.detectChanges();
+    // this.cd.markForCheck();
+  }
 }
+
 
 @NgModule({
   declarations: [TreeWidgetComponent, TreeItemComponent],
-  imports: [CommonModule],
-  exports: [TreeWidgetComponent, TreeItemComponent],
+  imports: [CommonModule, DragDropModule],
+  exports: [TreeWidgetComponent, TreeItemComponent, DragDropModule],
 })
 export class TreeWidgetModule {}

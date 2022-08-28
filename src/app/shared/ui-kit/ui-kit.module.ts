@@ -8,8 +8,6 @@ import { SplitterComponent } from './splitter/splitter.component';
 import { TreeWidgetComponent, TreeWidgetModule } from './tree-widget/tree-widget.component';
 import { TreeItemComponent } from './tree-widget/tree-item.component';
 
-
-
 @NgModule({
   declarations: [
     RxjsPaginatorComponent,
@@ -19,13 +17,12 @@ import { TreeItemComponent } from './tree-widget/tree-item.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule,
-
+    FontAwesomeModule
   ],
   exports: [
     RxjsPaginatorComponent,
     SplitterComponent,
-    TreeWidgetModule
+    TreeWidgetModule,
   ],
 })
 export class UiKitModule { }
