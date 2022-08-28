@@ -1,4 +1,19 @@
 
+
+# proof of concept of change detection mechanism in an angular project
+
+
+this project implements a tree widget
+
+in which the collapsing of nodes is based by modifying nodes instances properties
+this will break the functionality in case we want to implement an OnPush change detection strategy
+we need to refactor the code and use immutability: instead of modifying the datamodel (nodes) that are used as @Input() in the widget
+component, we create new references so that it will work
+
+(we want to use onpush to improve performance)
+
+
+
 # Exercises
 
   
