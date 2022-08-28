@@ -112,26 +112,22 @@ export class TreeDataService {
 
   constructor() {}
 
-  showNodes(nodeId: number): void {
-    const nodeFound = this.datasource.find(el => el.id === nodeId);
-    if (nodeFound) {
-      nodeFound.compressed = false;
-      // TreeUtils.findAllChildren(nodeId, this.datasource)
-      // .forEach(el => console.log('shw children: ', el))
-      TreeUtils.findAllChildren(nodeId, this.datasource).map(el => el.hidden = false);
-    }
+
+  toggleNodes(nodeId: number, hide: boolean): void {
+
+    // N.B. usage of the spread operator to construct a brand new object
+    const nodeFound = {...this.datasource.find(el => el.id === nodeId)!, compressed: hide };
+
+    const hiddenNodes = TreeUtils.findAllChildren(nodeId, this.datasource).map(el => { el.hidden = hide; return el; });
+    console.log('hidden nodes;' , hiddenNodes);
+    // N.B. usage of spread operator to concat nodeFound to array hiddenNodes
+    this.datasource = TreeUtils.mergeDedupe(this.datasource, [...hiddenNodes, nodeFound]);
+
+
   }
 
-  hideNodes(nodeId: number): void {
-    const nodeFound = this.datasource.find(el => el.id === nodeId);
-    if (nodeFound) {
-      nodeFound.compressed = true;
-      // TreeUtils.findAllChildren(nodeId, this.datasource)
-      // .forEach(el => console.log('hide children: ', el))
-      TreeUtils.findAllChildren(nodeId, this.datasource)
-      .map(el => el.hidden = true);
-    }
-  }
+
+
 }
 
 
@@ -144,7 +140,7 @@ export class TreeUtils {
 
   public static findAllChildren(
     idNode: number, datasource: FlatNodeView[], res: FlatNodeView[] = []): FlatNodeView[] {
-      // debugger;
+
     let children = [];
     for (let node of datasource) {
       if (node.parentId === idNode) {
@@ -153,10 +149,9 @@ export class TreeUtils {
     }
     for (let node of children) {
       res.push(node);
-      res.push(...TreeUtils.findAllChildren(node.id, datasource, res));
+      res = TreeUtils.findAllChildren(node.id, datasource, res);
     }
-    // todo miglioralo
-    return res.filter((v,i,a)=>a.findIndex(v2=>(v2.id===v.id))===i);
+    return res;
 
   }
 
@@ -180,5 +175,26 @@ export class TreeUtils {
 
   public static findParentId<T extends GenericItemNode>(idNode: number, listDocuments: T[]): number | null {
     return listDocuments.find(el => el.id === idNode)?.parentId ?? null;
+  }
+
+  /**
+   * merge the first array with the contents of the second array, if
+   * one element is present in both, always take it from sourceArr
+   * @param target
+   * @param source
+   * @returns
+   */
+   public static mergeDedupe(target: FlatNodeView[], source: FlatNodeView[]): FlatNodeView[] {
+    let res: FlatNodeView[] = [];
+    target.forEach(el => {
+      if (source.map(x => x.id).includes(el.id)) {
+        res.push({...source.find(x => x.id === el.id)!})
+      } else {
+        res.push({...el});
+      }
+    })
+    // N.B i pushed brand new nodes created with the usage of spread operator to make sure
+    // we are not holding old references
+    return res;
   }
 }
